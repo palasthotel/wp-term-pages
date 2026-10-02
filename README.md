@@ -15,7 +15,7 @@ it with the term you want to overwrite. Visitors hitting the term archive get a
 ## Installation
 
 Install *Term Pages* from the WordPress plugin directory, or download
-`term-pages.zip` from the [latest release](https://github.com/palasthotel/term-pages/releases/latest)
+`term-pages.zip` from the [latest release](https://github.com/palasthotel/wp-term-pages/releases/latest)
 and extract it into `wp-content/plugins/`.
 
 ## Usage
