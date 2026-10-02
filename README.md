@@ -41,7 +41,6 @@ repository-only.
 | `assets/` | media for the WordPress.org plugin page — not part of the download |
 | `plugin.php` | loads `public/term-pages.php` when the repository itself is checked out into `wp-content/plugins/` |
 | `LICENSE` | copy of the license text so GitHub detects it |
-| `bin/` | release helper scripts |
 | `.github/workflows/` | CI/CD — see [.github/WORKFLOWS.md](.github/WORKFLOWS.md) |
 
 ### `assets/`
@@ -82,10 +81,21 @@ The full pipeline, including the required secrets, is documented in
 [.github/WORKFLOWS.md](.github/WORKFLOWS.md). See [CONTRIBUTING.md](CONTRIBUTING.md)
 for the commit conventions.
 
-## Building locally
+## Local development
+
+There is nothing to build. The release packs `public/` with the shared script from
+[palasthotel/github-workflows](https://github.com/palasthotel/github-workflows); with
+that repository checked out next to this one:
 
 ```sh
-bash bin/pack.sh    # → term-pages.zip + build/term-pages/
+SLUG=term-pages bash ../github-workflows/wp-plugin/bin/pack.sh    # → term-pages.zip + build/term-pages/
+```
+
+For a local WordPress, wp-env runs without a configuration file and mounts the
+repository as the plugin (via `plugin.php`):
+
+```sh
+npx @wordpress/env start      # http://localhost:8888, admin / password
 ```
 
 ## License

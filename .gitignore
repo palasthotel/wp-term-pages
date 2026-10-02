@@ -1,6 +1,11 @@
-/.idea
-/.DS_Store
-*.DS_Store
+.DS_Store
+.idea
+/node_modules
+
+# pack.sh from palasthotel/github-workflows stages the payload here; the release
+# rsyncs from it into SVN
 /build
-/svn
-*.zip
+/term-pages.zip
+
+# wp-env
+/.wp-env.override.json

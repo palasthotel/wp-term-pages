@@ -1,182 +1,28 @@
 # CI/CD Workflows
 
-This repository uses four GitHub Actions workflows. The plugin is versioned by
-[release-please](https://github.com/googleapis/release-please) based on
-[conventional commits](https://www.conventionalcommits.org/):
-`fix:` → patch, `feat:` → minor, `feat!:` / `BREAKING CHANGE:` → major.
+The four workflows in `.github/workflows/` call the shared ones in
+[palasthotel/github-workflows](https://github.com/palasthotel/github-workflows). How
+they work, every input and what to do when a deploy fails is described there, in
+[docs/wp-plugin.md](https://github.com/palasthotel/github-workflows/blob/main/docs/wp-plugin.md).
 
-Tag format: `v*` (e.g. `v1.0.4`).
+What is specific to this plugin:
 
----
+| | |
+|---|---|
+| wordpress.org slug | `term-pages` |
+| version file | `version.txt` (`release-type: simple`) - there is no `package.json` |
+| build step | none - plain PHP and one script, `public/admin.js` |
+| development wrapper | `plugin.php`, `Plugin Name: Term Pages - DEV` - the PR check fails if it ends up in the payload |
+| SVN `assets/` | mirrored from `assets/` here with `--delete`, so this repository is the source of truth for the plugin page's icon and screenshots |
+| SVN `trunk/` | up to 2.0.0 it still held `screenshot-1.png`; the screenshot now lives in `assets/`, and the next deploy removes it from `trunk/` |
 
-## Overview
+### Required repository configuration
 
-```
-Push to main
-    │
-    ├──▶ [release-please.yml]
-    │        Creates / updates the release PR
-    │
-    │    On release PR (opened / synchronize)
-    ├──▶ [update-plugin-version.yml]
-    │        Syncs public/term-pages.php Version + readme.txt Stable tag & changelog
-    │
-    │    On PR to main
-    └──▶ [pr.yml]
-             php -l on 7.4 / 8.2 / 8.3
+Set for the organization and released to this repository: the variable
+`RELEASE_BOT_APP_ID` and the secrets `RELEASE_BOT_PRIVATE_KEY`, `SVN_USERNAME` and
+`SVN_PASSWORD`. The variable `SVN_REPO_URL` is no longer read and can be deleted.
 
-
-Merge release PR  →  release-please pushes tag v1.0.4 + creates GitHub Release
-    │
-    └── v*  ──▶ [wordpress-svn-release.yml]
-                    Version check → pack → upload zip to the Release
-                    → deploy to WordPress.org SVN (trunk + tags/1.0.4)
-```
-
----
-
-## Workflows
-
-### `pr.yml` — PR Checks
-
-**Trigger:** Any pull request targeting `main`
-
-Runs `php -l` over every `*.php` file on a PHP matrix (7.4, 8.2, 8.3). The
-plugin has no build step, so there is nothing else to check here.
-
----
-
-### `release-please.yml` — Release PR Management
-
-**Trigger:** Push to `main`
-**Token:** installation token of the org-owned *Palasthotel Release Bot* GitHub
-App, minted per run by `actions/create-github-app-token`. Required because
-`GITHUB_TOKEN` pushes do not trigger downstream workflows — the tag would never
-start `wordpress-svn-release.yml`.
-
-```
-Push to main
-      │
-      ▼
-  release-please
-      │
-      └──▶ opens / updates PR  "chore(main): release 1.0.4"
-                bumps version.txt
-                bumps .release-please-manifest.json
-                updates CHANGELOG.md
-
-  PR merged
-      └──▶ pushes tag v1.0.4
-           creates GitHub Release
-```
-
-> release-please overwrites the release PR branch on every run — it does not
-> rebase. If main gets another commit, the branch is re-created and the commit
-> from `update-plugin-version.yml` is re-applied by that workflow.
-
----
-
-### `update-plugin-version.yml` — Plugin Version Files
-
-**Trigger:** `pull_request` on `main` — types: `opened`, `synchronize`
-**Condition:** Only runs for release-please PRs (`release-please--*`) whose head
-branch lives in this repository
-**Token:** app installation token — pushing with it re-runs the PR checks on the
-new head commit, and `bin/update-plugin-version.sh` is idempotent, so the
-resulting `synchronize` event is a no-op instead of a loop
-
-Keeps the files WordPress actually reads in sync with `version.txt` *before* the
-PR is merged and the tag is created.
-
-```
-Release PR opened / updated
-              │
-              ▼
-    bash bin/update-plugin-version.sh
-              │
-              ├── reads version from version.txt
-              ├── updates "Version:" header in public/term-pages.php
-              ├── updates "Stable tag:" in public/readme.txt
-              └── prepends new "= x.y.z =" section to the readme.txt changelog
-              │
-              ▼
-    git commit + push → back onto the release PR branch
-```
-
----
-
-### `wordpress-svn-release.yml` — Deploy to WordPress.org
-
-**Trigger:** Push of a `v*` tag
-
-```
-Tag: v1.0.4
-      │
-      ├── strip prefix → VERSION=1.0.4
-      │
-      ├── bin/version-checker.sh
-      │       version.txt == readme.txt Stable tag == plugin header Version == tag
-      │       mismatch → job fails before anything is published
-      │
-      ├── bin/pack.sh
-      │       copies public/ → build/term-pages/
-      │       zip → term-pages.zip
-      │
-      ├──▶ Upload term-pages.zip to the GitHub Release
-      │       (softprops/action-gh-release, continue-on-error)
-      │
-      ├── svn checkout  $SVN_REPO_URL  →  ./svn/
-      │
-      └── SVN commit
-              rm trunk/*  +  rm tags/$VERSION
-              rsync -rL public/ → trunk/  →  tags/$VERSION/
-              rsync --delete assets/ → assets/   (plugin page media)
-              svn add --force .
-              svn rm deleted files
-              svn commit "Release version $VERSION"
-```
-
-`assets/` sits next to `trunk/` in the SVN repository and is served on the plugin
-page only — it is not part of what users download. The repository mirrors it with
-`--delete`, so it is the source of truth. When you adopt this workflow in a repo
-whose SVN `assets/` already holds files, copy those into the repository first,
-otherwise the next release deletes them.
-
-`rsync -rL` rather than `cp -r` because `cp` is platform-dependent — GNU `cp`
-keeps symlinks while descending a directory, BSD `cp` resolves them — and SVN
-refuses a commit that puts a symlink where it versions a regular file.
-
----
-
-## Required secrets / variables
-
-| Name | Type | Level | Value |
-|---|---|---|---|
-| `RELEASE_BOT_APP_ID` | variable | org | App ID of the *Palasthotel Release Bot* GitHub App |
-| `RELEASE_BOT_PRIVATE_KEY` | secret | org | that app's private key (full `.pem`, incl. BEGIN/END lines) |
-| `SVN_USERNAME` | secret | org | WordPress.org committer |
-| `SVN_PASSWORD` | secret | org | WordPress.org password |
-| `SVN_REPO_URL` | variable | repo | `https://plugins.svn.wordpress.org/term-pages` |
-
-The GitHub App is installed on this repository with `Contents: read & write` and
-`Pull requests: read & write`. `SVN_REPO_URL` is repo-level because the slug
-differs per plugin; everything else is shared across all plugin repos.
-
-release-please never pushes to `main` — it opens a pull request — so a branch
-ruleset on `main` needs no exception for the app. Add the app as a bypass actor
-only if one of these applies: a **tag** ruleset restricts creating `v*` tags, a
-ruleset also covers the `release-please--*` branches and forbids direct pushes,
-or signed commits are required. In those cases the bot cannot tag the release or
-update its own release PR.
-
----
-
-## Files the release touches
-
-| File | Updated by | Purpose |
-|---|---|---|
-| `version.txt` | release-please | machine-readable version, source for the sync script |
-| `.release-please-manifest.json` | release-please | last released version |
-| `CHANGELOG.md` | release-please | GitHub-facing changelog |
-| `public/term-pages.php` | `bin/update-plugin-version.sh` | `Version:` plugin header |
-| `public/readme.txt` | `bin/update-plugin-version.sh` | `Stable tag:` + `== Changelog ==` |
+release-please never pushes to `main` - it opens a pull request - so a branch
+ruleset on `main` needs no exception for the app. Add the app as a bypass actor only if
+a **tag** ruleset restricts creating `v*` tags, a ruleset also covers the
+`release-please--*` branches and forbids direct pushes, or signed commits are required.
