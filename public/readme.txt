@@ -3,7 +3,7 @@ Contributors: pixelwelt, edwardbock, palasthotel, janaeggebrecht
 Donate link: http://palasthotel.de/
 Tags: term, tags, category, static page
 Requires at least: 6.2
-Tested up to: 7.0.2
+Tested up to: 7.1.2
 Requires PHP: 7.4
 Stable tag: 2.0.0
 License: GPL-3.0-or-later
