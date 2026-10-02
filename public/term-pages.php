@@ -5,9 +5,10 @@
  * Description:       Redirects the first page of a term archive to a page of your choice.
  * Version:           2.0.0
  * Requires at least: 6.2
+ * Tested up to:      7.1.2
  * Requires PHP:      7.4
- * Author:            PALASTHOTEL <rezeption@palasthotel.de>
- * Author URI:        https://www.palasthotel.de
+ * Author:            Palasthotel <webmaster@palasthotel.de>
+ * Author URI:        https://palasthotel.de
  * License:           GPL-3.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-3.0.html
  * Text Domain:       term-pages

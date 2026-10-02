@@ -1,15 +1,15 @@
-# Copyright (C) 2026 PALASTHOTEL <rezeption@palasthotel.de>
+# Copyright (C) 2026 Palasthotel <webmaster@palasthotel.de>
 # This file is distributed under the GPL-3.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Term Pages 1.0.3\n"
+"Project-Id-Version: Term Pages 2.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/term-pages\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-31T18:14:01+00:00\n"
+"POT-Creation-Date: 2026-10-02T10:37:43+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: term-pages\n"
@@ -31,33 +31,33 @@ msgstr ""
 
 #. Author of the plugin
 #: term-pages.php
-msgid "PALASTHOTEL <rezeption@palasthotel.de>"
+msgid "Palasthotel <webmaster@palasthotel.de>"
 msgstr ""
 
 #. Author URI of the plugin
 #: term-pages.php
-msgid "https://www.palasthotel.de"
+msgid "https://palasthotel.de"
 msgstr ""
 
-#: term-pages.php:121
-#: term-pages.php:138
+#: term-pages.php:122
+#: term-pages.php:139
 msgid "Overriding page"
 msgstr ""
 
-#: term-pages.php:162
+#: term-pages.php:163
 msgid "Search for a published page"
 msgstr ""
 
-#: term-pages.php:173
+#: term-pages.php:174
 msgid "Start typing and pick a page from the list. Visitors of this term archive are then redirected to that page. Clear the field to remove the redirect."
 msgstr ""
 
-#: term-pages.php:196
+#: term-pages.php:197
 msgid "You are not allowed to edit terms of this taxonomy."
 msgstr ""
 
 #. translators: 1: page title, 2: page ID
-#: term-pages.php:231
+#: term-pages.php:232
 #, php-format
 msgid "%1$s (#%2$d)"
 msgstr ""
