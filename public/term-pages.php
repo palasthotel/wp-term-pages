@@ -5,7 +5,7 @@
  * Description:       Redirects the first page of a term archive to a page of your choice.
  * Version:           2.0.0
  * Requires at least: 6.2
- * Tested up to:      7.1.2
+ * Tested up to:      7.1
  * Requires PHP:      7.4
  * Author:            Palasthotel <webmaster@palasthotel.de>
  * Author URI:        https://palasthotel.de
