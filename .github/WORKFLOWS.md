@@ -11,7 +11,7 @@ What is specific to this plugin:
 |---|---|
 | wordpress.org slug | `term-pages` |
 | version file | `version.txt` (`release-type: simple`) - there is no `package.json` |
-| build step | none - plain PHP and one script, `public/admin.js` |
+| build step | none - plain PHP, `public/admin.js` and `public/admin.css` |
 | development wrapper | `plugin.php`, `Plugin Name: Term Pages - DEV` - the PR check fails if it ends up in the payload |
 | SVN `assets/` | mirrored from `assets/` here with `--delete`, so this repository is the source of truth for the plugin page's icon and screenshots |
 | SVN `trunk/` | up to 2.0.0 it still held `screenshot-1.png`; the screenshot now lives in `assets/`, and the next deploy removes it from `trunk/` |

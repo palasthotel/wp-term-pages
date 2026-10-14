@@ -34,7 +34,7 @@ repository-only.
 | Path | Description |
 |---|---|
 | `public/term-pages.php` | the plugin |
-| `public/admin.js` | page autocomplete on the term screens |
+| `public/admin.js`, `public/admin.css` | page autocomplete on the term screens, plain JavaScript without jQuery |
 | `public/languages/` | translations (`de_DE` + `.pot`) |
 | `public/readme.txt` | WordPress.org plugin page |
 | `public/LICENSE` | GPL-3.0 text, shipped with the plugin |

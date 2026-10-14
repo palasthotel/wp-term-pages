@@ -93,10 +93,17 @@ class Term_Pages {
 			return;
 		}
 
+		wp_enqueue_style(
+			'term-pages-admin',
+			plugins_url( 'admin.css', __FILE__ ),
+			array(),
+			$this->version()
+		);
+
 		wp_enqueue_script(
 			'term-pages-admin',
 			plugins_url( 'admin.js', __FILE__ ),
-			array( 'jquery-ui-autocomplete' ),
+			array(),
 			$this->version(),
 			true
 		);
