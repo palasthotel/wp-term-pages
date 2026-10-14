@@ -5,7 +5,7 @@ Tags: term, tags, category, static page
 Requires at least: 6.2
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 2.0.0
+Stable tag: 3.0.0
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -48,6 +48,17 @@ No. It only redirects. The term archive keeps its URL and remains reachable from
 1. Admin view for a tag where you can add the relation to a page in the autocomplete field.
 
 == Changelog ==
+
+= 3.0.0 =
+**⚠ BREAKING CHANGES**
+* requires PHP 8.0 or newer
+
+**Features**
+* drop support for PHP 7.4 (cf43ed2)
+
+**Bug Fixes**
+* page search without jQuery UI, Plugin Check clean (64b78b9)
+* show special characters in page titles correctly in the page search (b1d087e)
 
 = 2.0.0 =
 **⚠ BREAKING CHANGES**
