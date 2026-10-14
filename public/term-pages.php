@@ -11,7 +11,6 @@
  * License:           GPL-3.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-3.0.html
  * Text Domain:       term-pages
- * Domain Path:       /languages
  *
  * @copyright Copyright (c) 2019, Palasthotel
  */
@@ -59,15 +58,11 @@ class Term_Pages {
 	}
 
 	/**
-	 * Load translations and add the page field to every taxonomy with a UI.
+	 * Add the page field to every taxonomy with a UI.
+	 *
+	 * Translations come from translate.wordpress.org and are loaded by core.
 	 */
 	public function init() {
-		load_plugin_textdomain(
-			'term-pages',
-			false,
-			dirname( plugin_basename( __FILE__ ) ) . '/languages'
-		);
-
 		foreach ( get_taxonomies( array( 'show_ui' => true ) ) as $taxonomy ) {
 			add_action( $taxonomy . '_add_form_fields', array( $this, 'render_add_field' ) );
 			add_action( $taxonomy . '_edit_form_fields', array( $this, 'render_edit_field' ), 10, 2 );
@@ -90,10 +85,17 @@ class Term_Pages {
 			return;
 		}
 
+		wp_enqueue_style(
+			'term-pages-admin',
+			plugins_url( 'admin.css', __FILE__ ),
+			array(),
+			$this->version()
+		);
+
 		wp_enqueue_script(
 			'term-pages-admin',
 			plugins_url( 'admin.js', __FILE__ ),
-			array( 'jquery-ui-autocomplete' ),
+			array(),
 			$this->version(),
 			true
 		);
@@ -253,6 +255,7 @@ class Term_Pages {
 	public function save_field( $term_id, $tt_id ) {
 		unset( $tt_id );
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- core verified its add-tag/update-tag nonce before this hook
 		if ( ! isset( $_POST[ self::FIELD_NAME ] ) ) {
 			return;
 		}
@@ -261,7 +264,8 @@ class Term_Pages {
 			return;
 		}
 
-		$page_id = $this->parse_page_id( wp_unslash( $_POST[ self::FIELD_NAME ] ) );
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- core verified its add-tag/update-tag nonce before this hook
+		$page_id = $this->parse_page_id( sanitize_text_field( wp_unslash( $_POST[ self::FIELD_NAME ] ) ) );
 
 		if ( $page_id > 0 ) {
 			update_term_meta( $term_id, self::META_KEY, $page_id );
@@ -276,7 +280,7 @@ class Term_Pages {
 	 * Accepts a plain ID as sent by the current field, and the legacy
 	 * "Page title : 123" format of earlier versions.
 	 *
-	 * @param mixed $value Raw, unslashed field value.
+	 * @param mixed $value Unslashed, sanitized field value.
 	 * @return int Page ID or 0.
 	 */
 	private function parse_page_id( $value ) {

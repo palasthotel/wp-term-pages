@@ -16,5 +16,4 @@ jobs:
       dev-plugin-name: Term Pages - DEV
       required-files: |
         admin.js
-        languages/term-pages.pot
-        languages/term-pages-de_DE.mo
+        admin.css
