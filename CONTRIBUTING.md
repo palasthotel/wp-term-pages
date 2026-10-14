@@ -68,8 +68,8 @@ tested-up-to) are of course done by hand; just leave `Stable tag:` and the
 
 ## Checks
 
-Every PR runs `php -l` against PHP 7.4, 8.2, 8.3 and 8.4, packs the plugin and checks
-the payload, and checks the version carriers agree. The plugin declares
-`Requires PHP: 7.4` and `Requires at least: 6.2` (WordPress), so avoid syntax
+Every PR runs `php -l` against PHP 8.0 to 8.5, runs Plugin Check, packs the plugin and
+checks the payload, and checks the version carriers agree. The plugin declares
+`Requires PHP: 8.0` and `Requires at least: 6.2` (WordPress), so avoid syntax
 and APIs newer than that unless you raise the requirement in
 `public/term-pages.php` and `public/readme.txt` in the same PR.
