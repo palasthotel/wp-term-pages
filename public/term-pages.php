@@ -11,7 +11,6 @@
  * License:           GPL-3.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-3.0.html
  * Text Domain:       term-pages
- * Domain Path:       /languages
  *
  * @copyright Copyright (c) 2019, Palasthotel
  */
@@ -59,18 +58,11 @@ class Term_Pages {
 	}
 
 	/**
-	 * Load translations and add the page field to every taxonomy with a UI.
+	 * Add the page field to every taxonomy with a UI.
+	 *
+	 * Translations come from translate.wordpress.org and are loaded by core.
 	 */
 	public function init() {
-		// Still needed: translate.wordpress.org has no language pack for this
-		// plugin yet, so the bundled languages/ folder is the only translation.
-		// phpcs:ignore PluginCheck.CodeAnalysis.DiscouragedFunctions.load_plugin_textdomainFound -- bundled translations, no language pack yet
-		load_plugin_textdomain(
-			'term-pages',
-			false,
-			dirname( plugin_basename( __FILE__ ) ) . '/languages'
-		);
-
 		foreach ( get_taxonomies( array( 'show_ui' => true ) ) as $taxonomy ) {
 			add_action( $taxonomy . '_add_form_fields', array( $this, 'render_add_field' ) );
 			add_action( $taxonomy . '_edit_form_fields', array( $this, 'render_edit_field' ), 10, 2 );

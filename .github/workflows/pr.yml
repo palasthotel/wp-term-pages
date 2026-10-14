@@ -17,5 +17,3 @@ jobs:
       required-files: |
         admin.js
         admin.css
-        languages/term-pages.pot
-        languages/term-pages-de_DE.mo
