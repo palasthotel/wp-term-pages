@@ -62,6 +62,9 @@ class Term_Pages {
 	 * Load translations and add the page field to every taxonomy with a UI.
 	 */
 	public function init() {
+		// Still needed: translate.wordpress.org has no language pack for this
+		// plugin yet, so the bundled languages/ folder is the only translation.
+		// phpcs:ignore PluginCheck.CodeAnalysis.DiscouragedFunctions.load_plugin_textdomainFound -- bundled translations, no language pack yet
 		load_plugin_textdomain(
 			'term-pages',
 			false,
@@ -253,6 +256,7 @@ class Term_Pages {
 	public function save_field( $term_id, $tt_id ) {
 		unset( $tt_id );
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- core verified its add-tag/update-tag nonce before this hook
 		if ( ! isset( $_POST[ self::FIELD_NAME ] ) ) {
 			return;
 		}
@@ -261,7 +265,8 @@ class Term_Pages {
 			return;
 		}
 
-		$page_id = $this->parse_page_id( wp_unslash( $_POST[ self::FIELD_NAME ] ) );
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- core verified its add-tag/update-tag nonce before this hook
+		$page_id = $this->parse_page_id( sanitize_text_field( wp_unslash( $_POST[ self::FIELD_NAME ] ) ) );
 
 		if ( $page_id > 0 ) {
 			update_term_meta( $term_id, self::META_KEY, $page_id );
@@ -276,7 +281,7 @@ class Term_Pages {
 	 * Accepts a plain ID as sent by the current field, and the legacy
 	 * "Page title : 123" format of earlier versions.
 	 *
-	 * @param mixed $value Raw, unslashed field value.
+	 * @param mixed $value Unslashed, sanitized field value.
 	 * @return int Page ID or 0.
 	 */
 	private function parse_page_id( $value ) {
