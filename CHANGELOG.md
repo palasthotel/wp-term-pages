@@ -1,5 +1,22 @@
 # Changelog
 
+## [3.0.0](https://github.com/palasthotel/wp-term-pages/compare/v2.0.0...v3.0.0) (2026-10-14)
+
+
+### ⚠ BREAKING CHANGES
+
+* requires PHP 8.0 or newer
+
+### Features
+
+* drop support for PHP 7.4 ([cf43ed2](https://github.com/palasthotel/wp-term-pages/commit/cf43ed2cbb3f4c7cee4c4743ace2109a8b0c6596))
+
+
+### Bug Fixes
+
+* page search without jQuery UI, Plugin Check clean ([64b78b9](https://github.com/palasthotel/wp-term-pages/commit/64b78b9ec728101a0f60edd5bbcaeb2bcbda6f33))
+* show special characters in page titles correctly in the page search ([b1d087e](https://github.com/palasthotel/wp-term-pages/commit/b1d087eb89c3fc74bafb4f32fed8a609c026b818))
+
 ## [2.0.0](https://github.com/palasthotel/term-pages/compare/v1.0.3...v2.0.0) (2026-07-31)
 
 
